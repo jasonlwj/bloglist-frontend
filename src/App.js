@@ -76,6 +76,11 @@ const App = () => {
 		}
 	}
 
+	const handleLogout = () => {
+		setUser(null)
+		window.localStorage.removeItem('userLoggedIn')
+	}
+
 	return (
 		<div className="App">
 			<div>
@@ -88,7 +93,10 @@ const App = () => {
 							handleUsernameChange={handleUsernameChange}
 							handlePasswordChange={handlePasswordChange}
 						/>
-						: <BlogList blogs={blogs} />
+						: <div>
+							<BlogList blogs={blogs} />
+							<button onClick={handleLogout}>logout</button>
+						</div>
 				}
 			</div>
 		</div>

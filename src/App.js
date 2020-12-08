@@ -21,7 +21,6 @@ const LoginForm = ({ handleLogin, username, password, handleUsernameChange, hand
 
 const BlogList = ({ blogs }) => (
 	<div>
-		<h2>blogs</h2>
 		{blogs.map(blog =>
 			<Blog key={blog.id} blog={blog} />
 		)}
@@ -94,6 +93,8 @@ const App = () => {
 							handlePasswordChange={handlePasswordChange}
 						/>
 						: <div>
+							<h2>blogs</h2>
+							<p>{user.name} logged in</p>
 							<BlogList blogs={blogs} />
 							<button onClick={handleLogout}>logout</button>
 						</div>

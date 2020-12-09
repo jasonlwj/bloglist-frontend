@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import BlogList from './components/BlogList'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
+import Notification from './components/Notification'
+import Error from './components/Error'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import './App.css'
@@ -18,6 +20,10 @@ const App = () => {
 	// new blog state
 	const [ title, setTitle ] = useState('')
 	const [ url, setUrl ] = useState('')
+
+	// messages
+	const [ notificationMessage, setNotificationMessage] = useState(null)
+	const [ errorMessage, setErrorMessage] = useState(null)
 	
 	// get all blogs
 	useEffect(() => {
@@ -55,7 +61,10 @@ const App = () => {
 			setUsername('')
 			setPassword('')
 		} catch (error) {
-			console.log('Invalid credentials')
+			setErrorMessage('Wrong credentials')
+			setTimeout(() => {
+				setErrorMessage(null)
+			}, 5000)
 		}
 	}
 
@@ -72,15 +81,28 @@ const App = () => {
 			url
 		}
 
-		const returnedBlog = await blogService.create(blogToAdd)
-		setBlogs(blogs.concat(returnedBlog))
-		setTitle('')
-		setUrl('')
+		try {
+			const returnedBlog = await blogService.create(blogToAdd)
+			setBlogs(blogs.concat(returnedBlog))
+			setTitle('')
+			setUrl('')
+			setNotificationMessage(`a new blog ${blogToAdd.title} added`)
+			setTimeout(() => {
+				setNotificationMessage(null)
+			}, 5000)
+		} catch (error) {
+			setErrorMessage('Error in creating blog')
+			setTimeout(() => {
+				setErrorMessage(null)
+			}, 5000)
+		}
 	}
 
 	return (
 		<div className="App">
 			<div>
+				<Notification message={notificationMessage} />
+				<Error message={errorMessage} />
 				{
 					!user 
 						? <LoginForm

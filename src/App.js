@@ -1,31 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import Blog from './components/Blog'
+import BlogList from './components/BlogList'
+import LoginForm from './components/LoginForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import './App.css'
-
-const LoginForm = ({ handleLogin, username, password, handleUsernameChange, handlePasswordChange }) => (
-	<div>
-		<h2>log in to application</h2>
-		<form onSubmit={handleLogin}>
-			<div>
-				username <input type="text" value={username} onChange={handleUsernameChange} />
-			</div>
-			<div>
-				password <input type="password" value={password} onChange={handlePasswordChange} />
-			</div>
-			<button type="submit">login</button>
-		</form>
-	</div>
-)
-
-const BlogList = ({ blogs }) => (
-	<div>
-		{blogs.map(blog =>
-			<Blog key={blog.id} blog={blog} />
-		)}
-	</div>
-)
 
 const App = () => {
 	const [ blogs, setBlogs ] = useState([])

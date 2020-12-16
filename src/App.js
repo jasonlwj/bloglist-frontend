@@ -4,9 +4,12 @@ import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import Error from './components/Error'
+import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import './App.css'
+
+// TODO allow user to input author name - this also means modifying the backend
 
 const App = () => {
 	// blogs state
@@ -98,6 +101,21 @@ const App = () => {
 		}
 	}
 
+	// render the blog form
+	const blogForm = () => (
+		<Togglable buttonLabel='new blog'>
+				<h2>create new</h2>
+				<BlogForm
+					title={title}
+					handleTitleChange={({ target }) => setTitle(target.value)}
+					url={url}
+					handleUrlChange={({ target }) => setUrl(target.value)}
+					addBlog={addBlog}
+				/>
+		</Togglable>
+	)
+
+	// render the whole component
 	return (
 		<div className="App">
 			<div>
@@ -112,20 +130,15 @@ const App = () => {
 							handleUsernameChange={({ target }) => setUsername(target.value)}
 							handlePasswordChange={({ target }) => setPassword(target.value)}
 						/>
-						: <div>
-							<h2>blogs</h2>
-							<p>{user.name} logged in</p>
-							<BlogList blogs={blogs} />
-							<button onClick={handleLogout}>logout</button>
-							<h2>create new</h2>
-							<BlogForm
-								title={title}
-								handleTitleChange={({ target }) => setTitle(target.value)}
-								url={url}
-								handleUrlChange={({ target }) => setUrl(target.value)}
-								addBlog={addBlog}
-							/>
-						</div>
+						: (
+							<div>
+								<h2>blogs</h2>
+								<p>{user.name} logged in</p>
+								<BlogList blogs={blogs} />
+								<button onClick={handleLogout}>logout</button>
+								{blogForm()}
+							</div>
+						)
 				}
 			</div>
 		</div>

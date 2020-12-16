@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import BlogList from './components/BlogList'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
@@ -27,6 +27,9 @@ const App = () => {
 	// messages
 	const [ notificationMessage, setNotificationMessage] = useState(null)
 	const [ errorMessage, setErrorMessage] = useState(null)
+
+	// refs
+	const blogFormRef = useRef()
 	
 	// get all blogs
 	useEffect(() => {
@@ -46,6 +49,7 @@ const App = () => {
 		}
 	}, [])
 	
+	// login button event handler
 	const handleLogin = async event => {
 		event.preventDefault()
 
@@ -71,11 +75,13 @@ const App = () => {
 		}
 	}
 
+	// logout button event handler
 	const handleLogout = () => {
 		setUser(null)
 		window.localStorage.removeItem('userLoggedIn')
 	}
 
+	// add a blog to the global list of blogs
 	const addBlog = async event => {
 		event.preventDefault()
 
@@ -86,15 +92,20 @@ const App = () => {
 
 		try {
 			const returnedBlog = await blogService.create(blogToAdd)
+
+			blogFormRef.current.toggleVisibility()
+
 			setBlogs(blogs.concat(returnedBlog))
 			setTitle('')
 			setUrl('')
 			setNotificationMessage(`a new blog ${blogToAdd.title} added`)
+
 			setTimeout(() => {
 				setNotificationMessage(null)
 			}, 5000)
 		} catch (error) {
 			setErrorMessage('Error in creating blog')
+			
 			setTimeout(() => {
 				setErrorMessage(null)
 			}, 5000)
@@ -103,7 +114,7 @@ const App = () => {
 
 	// render the blog form
 	const blogForm = () => (
-		<Togglable buttonLabel='new blog'>
+		<Togglable buttonLabel='new blog' ref={blogFormRef}>
 				<h2>create new</h2>
 				<BlogForm
 					title={title}
